@@ -1,2 +1,2 @@
-# sparsity_learning
+# Sparsity Learning
 Reproduce Papers Associated with Learning with Sparsity
