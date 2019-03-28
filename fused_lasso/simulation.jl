@@ -10,12 +10,12 @@ using PyCall
 plt = pyimport("matplotlib.pyplot")
 
 ##### control panel #####
-Random.seed!(12345678)
-n = 500
+Random.seed!(1234)
+n = 80
 p = 100 
-σ = 0.75 
-λ = 0.1/n
-γ = 1.0/n
+σ = 0.5 
+λ = 1.0/n
+γ = 10.0/n
 
 ##### data generation & true parameter with 3 blocks #####
 X = randn(n, p)
@@ -42,7 +42,7 @@ plt.rc("font", family="Times New Roman", size=12)
 plt.figure()
 plt.xlabel("Predictor")
 plt.ylabel("Coefficient")
-plt.plot(x, θᵀ, label="True")
-plt.plot(x, θ, label="Estimation")
+plt.plot(x, θᵀ, "ro", ms=3.0, label="True")
+plt.plot(x, θ, "bo", ms=3.0, label="Estimation")
 plt.legend(loc="best")
-plt.savefig("simulation.png", bbox_inches="tight", transparent=true, dpi=600)
+plt.savefig("fused_lasso_simulation.png", bbox_inches="tight", transparent=false, dpi=600)

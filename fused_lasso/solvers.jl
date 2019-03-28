@@ -33,8 +33,9 @@ function solve_fused_lasso(X, y, θ, λ, γ, C, θᵀ; itm=1000, tol=1e-6, ptf=1
     ϵ = 1e-8
     D = (p-1)/2
     μ = ϵ/(2*D)
-    L = opnorm(X)^2 + (2*γ)^2 / μ
-    η = 1/L
+    L = opnorm(X)^2/n + opnorm(C)^2 / μ
+    #η = 1/L
+    η = 0.001
     κ = η*λ
 
     noi = 0
@@ -43,20 +44,22 @@ function solve_fused_lasso(X, y, θ, λ, γ, C, θᵀ; itm=1000, tol=1e-6, ptf=1
     obj = objective(X, y, θ, λ, γ)
 
     err = obj - true_obj
+
+    t = 1
+    ϕ = copy(θ)
+    ϕ⁻ = copy(θ)
     while err ≥ ϵ
         # gradient step on θ
         α = proj_max_ball(C*θ ./ μ)
         Δθ = X'*(X*θ - y)/n + C'*α
         BLAS.axpy!(-η, Δθ, θ)
-        
+
         # proximal operation
         prox_ℓ₁_norm(θ, κ)
-        
+    
         # learning information
         obj = objective(X, y, θ, λ, γ)
-        #err = norm(θ⁻ - θ)/η
         err = obj - true_obj
-        copyto!(θ⁻, θ)
 
         noi += 1
         if noi % ptf == 0 
