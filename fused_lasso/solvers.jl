@@ -9,6 +9,10 @@ function objective(X, y, θ, λ, γ)
     return 0.5*mean(abs2, X*θ - y) + λ*sum(abs, θ) + γ*s
 end
 
+function lasso_objective(X, y, θ, λ)
+    return 0.5*mean(abs2, X*θ - y) + λ*sum(abs, θ)
+end
+
 function proj_max_ball(θ)
     for i in eachindex(θ)
         θ[i] >  1 ? θ[i] =  1.0 :
@@ -23,6 +27,37 @@ function prox_ℓ₁_norm(θ, κ)
          abs(θ[i]) > κ ? θ[i] = sign(θ[i])*max(abs(θ[i]) - κ, 0) :
          θ[i] = 0.0
      end
+end
+
+function solve_lasso(X, y, θ, λ, θᵀ; itm=1000, tol=1e-6, ptf=100)
+    θ⁻ = copy(θ)
+    n = size(X, 1)
+    p = length(θ)
+    ϵ = 1e-8
+    η = 0.001
+    κ = η*λ
+
+    noi = 0
+
+    true_obj = lasso_objective(X, y, θᵀ, λ)
+    obj = lasso_objective(X, y, θ, λ)
+
+    err = obj - true_obj
+    while err ≥ ϵ
+        Δθ = X'*(X*θ - y)/n
+        BLAS.axpy!(-η, Δθ, θ)
+        
+        prox_ℓ₁_norm(θ, κ)
+
+        obj = lasso_objective(X, y, θ, λ)
+        err = obj - true_obj
+
+        noi += 1
+        if noi % ptf == 0
+            println("err: ", err, "\nobj: ", obj, "\n")
+        end
+    end
+    return θ
 end
 
 function solve_fused_lasso(X, y, θ, λ, γ, C, θᵀ; itm=1000, tol=1e-6, ptf=100)
