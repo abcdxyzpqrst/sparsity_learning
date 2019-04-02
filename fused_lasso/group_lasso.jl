@@ -15,7 +15,6 @@ n = 80          # number of observations
 p = 100         # problem dimension
 σ = 0.5         # noise level
 λ = 1.0/n       # regularization parameter for ℓ₁
-γ = 10.0/n      # regularization parameter for fusion penalty 
 
 # data generation with 3 different blocks 
 X = randn(n, p)
@@ -27,24 +26,19 @@ y = X*θᵀ + σ*randn(n)
 
 # learning parameter & edge-vertex matrix 
 θ = randn(p)
-C = zeros(p-1, p)
-for j = 2:p
-    C[j-1, j-1] = γ
-    C[j-1, j] = -γ
-end
 
 # solve a fused lasso with smooth proximal gradient descent 
-solve_fused_lasso(X, y, θ, λ, γ, C, θᵀ)
+solve_group_lasso(X, y, θ, λ, θᵀ)
 
 # plotting results 
 x = collect(1:1:p)
 plt.rc("text", usetex=true)
 plt.rc("font", family="Times New Roman", size=12)
 plt.figure()
-plt.title("Fused Lasso")
+plt.title("Group Lasso")
 plt.xlabel("Predictor")
 plt.ylabel("Coefficient")
 plt.plot(x, θᵀ, "ro", ms=3.0, label="True")
 plt.plot(x, θ, "bo", ms=3.0, label="Estimation")
 plt.legend(loc="best")
-plt.savefig("fused_lasso_simulation.pdf", bbox_inches="tight", transparent=false, dpi=600)
+plt.savefig("group_lasso_simulation.pdf", bbox_inches="tight", transparent=false, dpi=600)
