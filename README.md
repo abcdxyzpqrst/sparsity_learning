@@ -1,4 +1,4 @@
-# Sparsity Learning
+# Learning with Sparsity
 Reproduce Papers Associated with Learning with Sparsity
 * Lasso 
 * Group Lasso
