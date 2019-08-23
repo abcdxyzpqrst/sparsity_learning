@@ -33,7 +33,7 @@ solve_group_lasso(X, y, θ, λ, θᵀ)
 # plotting results 
 x = collect(1:1:p)
 plt.rc("text", usetex=true)
-plt.rc("font", family="Times New Roman", size=12)
+plt.rc("font", family="Times New Roman", size=16)
 plt.figure()
 plt.title("Group Lasso")
 plt.xlabel("Predictor")

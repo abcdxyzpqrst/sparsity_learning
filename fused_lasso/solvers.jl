@@ -160,3 +160,7 @@ function solve_fused_lasso(X, y, θ, λ, γ, C, θᵀ; itm=1000, tol=1e-6, ptf=1
     end
     return θ
 end
+
+function group_fused_lasso(X, y, θ, λ, γ, C, θᵀ; itm=1000, tol=1e-6, ptf=100)
+
+end
